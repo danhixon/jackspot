@@ -1,23 +1,22 @@
-// depends on the SpotifyControl script found here (https://github.com/dronir/SpotifyControl)
+// Built for Audio Hijack 4.4.4
+// Depends on the SpotifyControl script here (https://github.com/whiteemikee/SpotifyControl) forked from dronir's script found here (https://github.com/dronir/SpotifyControl)
+
+function _throw(m) { throw m; }
 
 function extractValue(label, text) {
 	const regex = new RegExp(`${label}:\\s*(.+)`);
 	const match = text.match(regex);
 	return match ? match[1].trim() : null;
-};
+}
 
-function getTrackInfo(trackInfoString) {
-	return {
+function updateTags(recorder, trackInfoString) {
+	recorder.updateTags({
 		artist: extractValue('Artist', trackInfoString),
-		track: extractValue('Track', trackInfoString),
+		title: extractValue('Track', trackInfoString),
 		album: extractValue('Album', trackInfoString),
-		uri: extractValue('URI', trackInfoString),
-		duration: extractValue('Duration', trackInfoString),
-		position: extractValue('Now at', trackInfoString),
-		playerState: extractValue('Player', trackInfoString),
-		volume: extractValue('Volume', trackInfoString),
-	}
-};
+		comment: extractValue('Artwork', trackInfoString),
+	});
+}
 
 function startCapture() {
 	// set the playhead back to the beginning of the track
@@ -27,11 +26,18 @@ function startCapture() {
 	const session = app.sessionWithName('Spotify');
 	session.start()
 	app.runShellCommand('spotify start');
-};
+}
 
 
 let result = app.runShellCommand('spotify info');
-let trackInfoString = null;
-if (result[0] == 0) {
-	trackInfoString = result[1];
-}
+let trackInfo = null;
+result[0] == 0 ? 	trackInfo = result[1] : _throw("Unable to get track info.");
+
+let session = app.sessionWithName('Spotify');
+let recorder = session.blockWithName('Recorder');
+recorder.fileName = "%tag_artist-%tag_album-%tag_title";
+updateTags(recorder, trackInfo);
+
+startCapture();
+
+// TODO: add looping for multiple tracks
