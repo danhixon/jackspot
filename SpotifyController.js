@@ -28,6 +28,7 @@ function getTrackInfo() {
     album: extractValue('Album', result[1]),
     // TODO: figure out how to add the artwork itself to the artwork field.
     comment: extractValue('Artwork', result[1]),
+    uri: extractValue('URI', result[1]),
     duration: extractDuration_ms(extractValue('Duration', result[1])),
   };
 }
@@ -63,7 +64,7 @@ function main() {
 
     if (trackInfo == null) {
       throw "Unable to obtain track info.";
-    } else if (trackInfo.title == 'Advertisement') {
+    } else if (trackInfo.uri.includes("ad")) {
       // do not start recording and wait until a track is playing again.
       app.runShellCommand('spotify start');
       sleep(trackInfo.duration);
