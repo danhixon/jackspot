@@ -56,6 +56,7 @@ function main() {
   const session = app.sessionWithName('Spotify');
   const recorder = session.blockWithName('Recorder');
   let previous = null;
+  let i = 1;
 
   while (true) {
     let trackInfo = getTrackInfo();
@@ -72,11 +73,12 @@ function main() {
       break;
     } else if (previous == null || trackInfo.title != previous.title) {
       // track has changed -- start a new recording
-      recorder.fileName = "%tag_artist-%tag_album-%tag_title";
+      recorder.fileName = "%tag_artist-%tag_album-" + i.toString().padStart(2, '0') + "-%tag_title";
       updateTags(recorder, trackInfo);
       startCapture(session);
       sleep(trackInfo.duration);
       stopCapture(session);
+      i++;
     } else {
       sleep(1000);
     }
