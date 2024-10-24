@@ -64,7 +64,7 @@ function main() {
 
     if (trackInfo == null) {
       throw "Unable to obtain track info.";
-    } else if (trackInfo.uri.includes("ad")) {
+    } else if (trackInfo.uri.includes(":ad:")) {
       // do not start recording and wait until a track is playing again.
       app.runShellCommand('spotify start');
       sleep(trackInfo.duration);
