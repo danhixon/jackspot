@@ -5,7 +5,7 @@
 function _throw(m) { throw m; }
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return app.runShellCommand('sleep ' + ms / 1000);
 }
 
 function extractValue(label, text) {
@@ -38,19 +38,23 @@ function updateTags(recorder, trackInfo) {
   recorder.updateTags(copy);
 }
 
-function startCapture() {
+function startCapture(session) {
   // set the playhead back to the beginning of the track
   app.runShellCommand('spotify jump 0');
   // make sure the volume is all the way up
   app.runShellCommand('spotify volume 100');
-  const session = app.sessionWithName('Spotify');
   session.start()
   app.runShellCommand('spotify start');
 }
 
-async function main() {
-  let session = app.sessionWithName('Spotify');
-  let recorder = session.blockWithName('Recorder');
+function stopCapture(session) {
+  session.stop();
+  app.runShellCommand('spotify stop');
+}
+
+function main() {
+  const session = app.sessionWithName('Spotify');
+  const recorder = session.blockWithName('Recorder');
   let previous = null;
 
   while (true) {
@@ -58,16 +62,23 @@ async function main() {
 
     if (trackInfo == null) {
       throw "Unable to obtain track info.";
-    } else if (trackInfo.album == 'Advertisement') {
+    } else if (trackInfo.title == 'Advertisement') {
       // do not start recording and wait until a track is playing again.
-    } else if (trackInfo.title != previousTitle) {
+      app.runShellCommand('spotify start');
+      sleep(trackInfo.duration);
+      app.runShellCommand('spotify stop');
+      continue;  // skip the assignment of 'previous'
+    } else if (previous != null && trackInfo.album != previous.album) {
+      break;
+    } else if (previous == null || trackInfo.title != previous.title) {
       // track has changed -- start a new recording
       recorder.fileName = "%tag_artist-%tag_album-%tag_title";
       updateTags(recorder, trackInfo);
-      startCapture();
+      startCapture(session);
+      sleep(trackInfo.duration);
+      stopCapture(session);
     } else {
-      // sleep for the duration of the current track
-      await sleep(trackInfo.duration)
+      sleep(1000);
     }
     previous = Object.assign({}, trackInfo);
   }
