@@ -75,6 +75,7 @@ function main() {
     } else if (previous == null || trackInfo.title != previous.title) {
       // track has changed -- start a new recording
       recorder.fileName = "%tag_artist-%tag_album-" + i.toString().padStart(2, '0') + "-%tag_title";
+      trackInfo.track = i;
       updateTags(recorder, trackInfo);
       startCapture(session);
       sleep(trackInfo.duration);
