@@ -52,14 +52,14 @@ _You might want to add the album artwork to the Recorder Tags now. The artwork c
 ### 2. Audio Hijack
 1. Open Audio Hijack and create a new Session called "Music".
 2. The Session should have these blocks: an Application source block (Music), a Recorder block, and an output block (optional).
+<img width="1154" height="819" alt="Session" src="https://github.com/user-attachments/assets/82e7ce85-24ec-4db2-a3ea-146d1669105c" />
 
-![Screenshot 2024-10-25 at 7 23 31 AM](https://github.com/user-attachments/assets/fbb1d4d9-ad6b-4376-938d-dd4f5e9e4dac)
 
 5. Set the parameter "Fill playback gaps with silence" to true in the Application block. Set the  Recorder block parameters as desired. The filename and tags will be set automatically by the script per track.
+<img width="568" height="655" alt="Application Block" src="https://github.com/user-attachments/assets/6075ec94-0372-4167-b3c4-820aa58e244f" />
 
-![Screenshot 2024-10-25 at 7 24 57 AM](https://github.com/user-attachments/assets/5b5e40ac-380a-47cb-b7d5-75b1419ffdf7)
-
-![Screenshot 2024-10-25 at 7 27 18 AM](https://github.com/user-attachments/assets/ca1e8a4f-3551-4f55-8a50-7c85886f41c3)
+Set your album art here:
+<img width="1154" height="865" alt="Screenshot 2025-09-18 at 3 19 23 PM" src="https://github.com/user-attachments/assets/8874e32c-576b-48e8-9afd-31452a69e183" />
 
 _You might want to add the album artwork to the Recorder Tags now. The artwork can be added later, but it is easier to do it now so it is automatically applied to all recorded tracks for the current session._
 
